@@ -1,2 +1,6 @@
-.idea/
+# IDEA-specific files (may be unignored)
 qsp-parser.iml
+.idea/
+
+# The file 'workspace.xml' should be ignored at all times
+.idea/workspace.xml
