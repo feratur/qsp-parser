@@ -12,7 +12,7 @@ const findFunction = candidate => {
         if (shortestCommand.wordCount === 1)
             throw new Error(ERROR_MSG.INVALID_COMMAND_POSITION(shortestCommand.command.name));
     }
-    const shortName = name.charAt(0) === '$' ? name.slice(1) : name;
+    const shortName = candidate.charAt(0) === '$' ? candidate.slice(1) : candidate;
     if (!shortName)
         throw new Error(ERROR_MSG.INVALID_SYMBOL('$'));
     const funcValue = functionMap[shortName];
