@@ -1,7 +1,11 @@
 const syntaxUtils = require('../../src/utils/syntaxUtils');
 
 const chai = require('chai');
+const {describe, it} = require('mocha');
+const dirtyChai = require('dirty-chai');
 const {expect} = chai;
+
+chai.use(dirtyChai);
 
 describe('syntaxUtils', () => {
     describe('findBracket', () => {
@@ -17,7 +21,7 @@ describe('syntaxUtils', () => {
     });
     describe('validateArgCount', () => {
         it('works as intended', () => {
-            const test = () => syntaxUtils.validateArgCount([1, 2], 'test', 1, 2);
+            const test = () => syntaxUtils.validateArgCount([1, 2], 'test', 1, 3);
             expect(test).to.not.throw();
         });
         it('throws if too few args', () => {
@@ -39,7 +43,7 @@ describe('syntaxUtils', () => {
         });
         it('works with empty input', () => {
             const result = syntaxUtils.splitArguments('');
-            expect(result).to.be.empty;
+            expect(result).to.be.empty();
         });
         it('throws on invalid input', () => {
             const test1 = () => syntaxUtils.splitArguments('a,,b');
