@@ -1,21 +1,21 @@
-const SUB_EXPRESSION_TYPE = require('../constants/SUB_EXPRESSION_TYPE');
+const EXPRESSION_TYPE = require('../constants/EXPRESSION_TYPE');
 const QspExpression = require('../classes/QspExpression');
 const QspFunction = require('../classes/QspFunction');
 
 const getIntExpression = value => {
-    return new QspExpression(SUB_EXPRESSION_TYPE.INTEGER, value);
+    return new QspExpression(EXPRESSION_TYPE.INTEGER, value);
 };
 
 const getRawStringExpression = value => {
-    return new QspExpression(SUB_EXPRESSION_TYPE.RAW_STRING, value);
+    return new QspExpression(EXPRESSION_TYPE.STRING, value);
 };
 
 const getOperatorExpression = value => {
-    return new QspExpression(SUB_EXPRESSION_TYPE.OPERATOR, value);
+    return new QspExpression(EXPRESSION_TYPE.OPERATOR, value);
 };
 
 const getFunctionExpression = (funcName, args) => {
-    return new QspExpression(SUB_EXPRESSION_TYPE.EXPR, new QspFunction(funcName, args));
+    return new QspExpression(EXPRESSION_TYPE.FUNCTION, new QspFunction(funcName, args));
 };
 
 const getIndexedStringExpression = str => {

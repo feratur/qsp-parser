@@ -1,5 +1,5 @@
 const ERROR_MSG = require('../constants/ERROR_MSG');
-const SUB_EXPRESSION_TYPE = require('../constants/SUB_EXPRESSION_TYPE');
+const EXPRESSION_TYPE = require('../constants/EXPRESSION_TYPE');
 const expressionFactory = require('./expressionFactory');
 
 const operators = {
@@ -39,7 +39,7 @@ const addAsUnaryOperator = (op, opList) => {
     }
 };
 
-const isOperator = expr => expr.type === SUB_EXPRESSION_TYPE.OPERATOR;
+const isOperator = expr => expr.type === EXPRESSION_TYPE.OPERATOR;
 
 const validateTokenOrder = tokens => {
     const firstToken = tokens[0];
