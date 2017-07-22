@@ -1,0 +1,9 @@
+{
+  "name": "qsp-parser",
+  "version": "0.1.0",
+  "description": "QSP language parser",
+  "main": "index.js",
+  "repository": "https://github.com/feratur/qsp-parser.git",
+  "author": "feratur <feraturdev@gmail.com>",
+  "license": "MIT"
+}
