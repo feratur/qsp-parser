@@ -58,7 +58,7 @@ const readToken = (str, tokenList, parseFunc) => {
     throw new Error(ERROR_MSG.INVALID_EXPR);
 };
 
-const parseExpression = function parseExpression(expr) {
+const parseExpression = expr => {
     const tokens = [];
     let str = expr;
     while (str)

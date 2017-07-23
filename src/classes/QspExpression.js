@@ -1,6 +1,6 @@
 class QspExpression {
-    constructor(type, value) {
-        this.type = type;
+    constructor(isAtom, value) {
+        this.isAtom = isAtom;
         this.value = value;
     }
 }
