@@ -99,7 +99,7 @@ const parseGetVariable = (varName, indexer, parseFunc) => {
         varInfo.isInt ? expressionFactory.getIntExpression(-1) : expressionFactory.getIntExpression(0),
         indexerExpr
     ]);
-    writeStringAsExpressions(varInfo.name, result.args);
+    writeStringAsExpressions(varInfo.name, result.value.args);
     return result;
 };
 
