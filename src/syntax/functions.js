@@ -29,7 +29,7 @@ const functions = [
     { "name": "SELACT", "minArgs": 1, "maxArgs": 1 },
     { "name": "SELOBJ", "minArgs": 1, "maxArgs": 1 },
     { "name": "STATTXT", "minArgs": 0, "maxArgs": 0 },
-    { "name": "STR", "minArgs": 0, "maxArgs": 1 },
+    { "name": "STR", "minArgs": 1, "maxArgs": 1 },
     { "name": "STRCOMP", "minArgs": 0, "maxArgs": 0 },
     { "name": "STRFIND", "minArgs": 0, "maxArgs": 2 },
     { "name": "STRPOS", "minArgs": 1, "maxArgs": 1 },

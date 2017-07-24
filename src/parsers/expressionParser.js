@@ -21,7 +21,7 @@ const readToken = (str, tokenList, parseFunc) => {
         tokenList.push(expressionFactory.getIndexedStringExpression(stringMatch[0]));
         return str.slice(stringMatch[0].length).trim();
     }
-    const opMatch = str.match(/^(?:<>|<=|>=|=<|=>|\+|-|\*|\/|!|=|<|>|&)/);
+    const opMatch = str.match(/^(?:MOD|AND|OBJ|LOC|OR|NO|<>|<=|>=|=<|=>|\+|-|\*|\/|!|=|<|>|&)/);
     if (opMatch) {
         tokenList.push(expressionFactory.getOperatorExpression(opMatch[0]));
         return str.slice(opMatch[0].length).trim();

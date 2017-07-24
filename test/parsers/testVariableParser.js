@@ -90,51 +90,51 @@ describe('variableParser', () => {
             for (let i = 3; i < result.args.length; ++i) {
                 resultVarName += String.fromCharCode(result.args[i].value);
             }
-            const expectedValue = JSON.parse(
-                '{\n' +
-                '  "isAtom": false,\n' +
-                '  "value": {\n' +
-                '    "name": "__PLUS__",\n' +
-                '    "args": [\n' +
-                '      {\n' +
-                '        "isAtom": false,\n' +
-                '        "value": {\n' +
-                '          "name": "__GET_VAR__",\n' +
-                '          "args": [\n' +
-                '            {\n' +
-                '              "isAtom": true,\n' +
-                '              "value": -1\n' +
-                '            },\n' +
-                '            {\n' +
-                '              "isAtom": true,\n' +
-                '              "value": 0\n' +
-                '            },\n' +
-                '            {\n' +
-                '              "isAtom": true,\n' +
-                '              "value": 84\n' +
-                '            },\n' +
-                '            {\n' +
-                '              "isAtom": true,\n' +
-                '              "value": 69\n' +
-                '            },\n' +
-                '            {\n' +
-                '              "isAtom": true,\n' +
-                '              "value": 83\n' +
-                '            },\n' +
-                '            {\n' +
-                '              "isAtom": true,\n' +
-                '              "value": 84\n' +
-                '            }\n' +
-                '          ]\n' +
-                '        }\n' +
-                '      },\n' +
-                '      {\n' +
-                '        "isAtom": true,\n' +
-                '        "value": 42\n' +
-                '      }\n' +
-                '    ]\n' +
-                '  }\n' +
-                '}');
+            const expectedValue = JSON.parse(`
+                {
+                  "isAtom": false,
+                  "value": {
+                    "name": "__PLUS__",
+                    "args": [
+                      {
+                        "isAtom": false,
+                        "value": {
+                          "name": "__GET_VAR__",
+                          "args": [
+                            {
+                              "isAtom": true,
+                              "value": -1
+                            },
+                            {
+                              "isAtom": true,
+                              "value": 0
+                            },
+                            {
+                              "isAtom": true,
+                              "value": 84
+                            },
+                            {
+                              "isAtom": true,
+                              "value": 69
+                            },
+                            {
+                              "isAtom": true,
+                              "value": 83
+                            },
+                            {
+                              "isAtom": true,
+                              "value": 84
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "isAtom": true,
+                        "value": 42
+                      }
+                    ]
+                  }
+                }`);
             expect(result.name).to.equal('__SET_VAR__');
             expect(result.args[0]).to.deep.equal(expressionFactory.getIntExpression(-1));
             expect(result.args[1]).to.deep.equal(expressionFactory.getIntExpression(0));
