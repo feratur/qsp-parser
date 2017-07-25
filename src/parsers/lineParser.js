@@ -131,7 +131,7 @@ exports.parseLine = (line, index, blockStack, jumpLabels) => {
     const cmdObj = keywordManager.findCommand(head, line);
     if (cmdObj) {
         const {command} = cmdObj;
-        const cmdTail = line.slice(cmdObj.match).trim();
+        const cmdTail = line.slice(cmdObj.match.length).trim();
         const args = splitCmdArgs(cmdTail);
         syntaxUtils.validateArgCount(args, command.name, command.minArgs, command.maxArgs);
         return new QspCommand(command.name, args.map(x => expressionParser.parseExpression(x)));

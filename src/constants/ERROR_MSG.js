@@ -3,7 +3,6 @@ module.exports = {
     INVALID_SYMBOL: symbol => `Invalid usage of symbol '${symbol}'`,
     INVALID_KEYWORD: keyword => `Invalid usage of keyword '${keyword}'`,
     INVALID_COMMAND_POSITION: command => `Command '${command}' is placed in a wrong position`,
-    INVALID_VAR_NAME: varName => `'${varName}' is invalid name for a variable`,
     ARG_SPLIT_ERROR: 'Failed to split procedure arguments',
     INVALID_ARG_COUNT: procName => `Invalid number of arguments for procedure '${procName}'`,
     SYMBOL_MISSING: (cmd, symbol) => `Symbol '${symbol}' is missing for '${cmd}' expression`,

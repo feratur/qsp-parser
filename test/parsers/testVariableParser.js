@@ -141,9 +141,9 @@ describe('variableParser', () => {
             expect(result.args[2]).to.deep.equal(expectedValue);
             expect(resultVarName).to.equal(varName);
         });
-        it('throws on invalid variable name', () => {
-            const test = () => variableParser.parseSetVariable('$ARRCOMP = 42', expressionParser.parseExpression);
-            expect(test).to.throw();
+        it('returns null if possible var name is reserved word', () => {
+            const result = variableParser.parseSetVariable('$CURLOC = 42', expressionParser.parseExpression);
+            expect(result).to.be.null()
         });
     });
     describe('parseGetVariable', () => {

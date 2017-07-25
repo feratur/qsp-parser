@@ -60,7 +60,7 @@ const parseSetVariable = (str, parseFunc) => {
     if (!assignment)
         return null;
     if (keywordManager.findFunction(assignment.varName))
-        throw new Error(ERROR_MSG.INVALID_VAR_NAME(assignment.varName));
+        return null;
     let indexerExpr;
     if (assignment.indexer) {
         const innerExpr = assignment.indexer.slice(1, -1).trim();
