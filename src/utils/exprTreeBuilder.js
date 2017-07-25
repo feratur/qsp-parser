@@ -1,5 +1,4 @@
 const ERROR_MSG = require('../constants/ERROR_MSG');
-const SUB_EXPRESSION_TYPE = require('../constants/SUB_EXPRESSION_TYPE');
 const expressionFactory = require('./expressionFactory');
 
 const operators = {
@@ -39,7 +38,7 @@ const addAsUnaryOperator = (op, opList) => {
     }
 };
 
-const isOperator = expr => expr.type === SUB_EXPRESSION_TYPE.OPERATOR;
+const isOperator = expr => expr.isAtom && typeof expr.value === 'string';
 
 const validateTokenOrder = tokens => {
     const firstToken = tokens[0];
@@ -72,50 +71,69 @@ const validateTokenOrder = tokens => {
 };
 
 const arrangeRpnOrder = tokens => {
-    const result = [];
     const opStack = [];
-    for (const token of tokens) {
+    const rpnStack = [];
+    for (let i = 0; i < tokens.length; ++i) {
+        const token = tokens[i];
         if (!isOperator(token)) {
-            result.push(token);
+            rpnStack.push(token);
         } else {
             const curOp = operators[token.value];
             while (opStack.length > 0) {
-                const lastOp = operators[opStack[opStack.length - 1].value];
-                if (curOp.isBinary && curOp.priority > lastOp.priority)
+                if (curOp.priority > operators[opStack[opStack.length - 1].value].priority)
                     break;
-                if (!curOp.isBinary && curOp.priority >= lastOp.priority)
-                    break;
-                result.push(opStack.pop());
+                rpnStack.push(opStack.pop());
             }
             opStack.push(token);
         }
     }
-    while (opStack.length > 0) {
-        result.push(opStack.pop());
-    }
-    return result;
+    while (opStack.length > 0)
+        rpnStack.push(opStack.pop());
+    return rpnStack;
 };
 
-const buildTree = function buildTree(rootNode, tokens) {
+const buildTree = (rootNode, tokens) => {
     const op = operators[rootNode.value];
-    if (op.isBinary) {
-        const secondArgToken = tokens.pop();
-        const secondArg = isOperator(secondArgToken) ? buildTree(secondArgToken, tokens) : secondArgToken;
-        const firstArgToken = tokens.pop();
-        const firstArg = isOperator(firstArgToken) ? buildTree(firstArgToken, tokens) : firstArgToken;
-        return expressionFactory.getFunctionExpression(op.funcName, [firstArg, secondArg]);
+    const secondArgToken = tokens.pop();
+    const secondArg = isOperator(secondArgToken) ? buildTree(secondArgToken, tokens) : secondArgToken;
+    const firstArgToken = tokens.pop();
+    const firstArg = isOperator(firstArgToken) ? buildTree(firstArgToken, tokens) : firstArgToken;
+    return expressionFactory.getFunctionExpression(op.funcName, [firstArg, secondArg]);
+};
+
+const buildAst = tokens => {
+    const rpnStack = arrangeRpnOrder(tokens);
+    if (rpnStack.length === 1)
+        return tokens[0];
+    return buildTree(rpnStack.pop(), rpnStack);
+};
+
+const transformUnaryOperators = (tokens, result, priority, startIndex) => {
+    for (let i = startIndex; i < tokens.length; ++i) {
+        const token = tokens[i];
+        if (!isOperator(token)) {
+            result.push(token);
+            continue;
+        }
+        const op = operators[token.value];
+        if (op.isBinary) {
+            if (priority >= op.priority)
+                return i - 1;
+            result.push(token);
+        } else {
+            const funcTokens = [];
+            i = transformUnaryOperators(tokens, funcTokens, op.priority, i + 1);
+            result.push(expressionFactory.getFunctionExpression(op.funcName, [buildAst(funcTokens)]));
+        }
     }
-    const arg = tokens.pop();
-    const realArg = isOperator(arg) ? buildTree(arg, tokens) : arg;
-    return expressionFactory.getFunctionExpression(op.funcName, [realArg]);
+    return tokens.length;
 };
 
 exports.getExpressionTree = tokens => {
     if (tokens.length === 0)
         throw new Error(ERROR_MSG.EMPTY_EXPR);
-    if (tokens.length === 1 && !isOperator(tokens[0]))
-        return tokens[0];
     const validatedTokens = validateTokenOrder(tokens);
-    const rpnTokens = arrangeRpnOrder(validatedTokens);
-    return buildTree(rpnTokens.pop(), rpnTokens);
+    const resultTokens = [];
+    transformUnaryOperators(validatedTokens, resultTokens, 0, 0);
+    return buildAst(resultTokens);
 };

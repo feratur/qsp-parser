@@ -50,12 +50,15 @@ const getVarInfo = varName => {
     return {name: name, isInt: isInt};
 };
 
+const writeStringAsExpressions = (str, exprList) => {
+    for (let i = 0; i < str.length; ++i)
+        exprList.push(expressionFactory.getIntExpression(str.charCodeAt(i)));
+};
+
 const parseSetVariable = (str, parseFunc) => {
     const assignment = tryParseVarAssignment(str);
-    if (!assignment)
+    if (!assignment || keywordManager.findFunction(assignment.varName))
         return null;
-    if (keywordManager.findFunction(assignment.varName))
-        throw new Error(ERROR_MSG.INVALID_VAR_NAME(assignment.varName));
     let indexerExpr;
     if (assignment.indexer) {
         const innerExpr = assignment.indexer.slice(1, -1).trim();
@@ -72,12 +75,13 @@ const parseSetVariable = (str, parseFunc) => {
         valueExpr = parseFunc(assignment.tail);
     }
     const varInfo = getVarInfo(assignment.varName);
-    return new QspCommand('__SET_VAR__', [
-        expressionFactory.getRawStringExpression(varInfo.name),
+    const result = new QspCommand('__SET_VAR__', [
         varInfo.isInt ? expressionFactory.getIntExpression(-1) : expressionFactory.getIntExpression(0),
         indexerExpr,
         valueExpr
     ]);
+    writeStringAsExpressions(varInfo.name, result.args);
+    return result;
 };
 
 const parseGetVariable = (varName, indexer, parseFunc) => {
@@ -89,11 +93,12 @@ const parseGetVariable = (varName, indexer, parseFunc) => {
     } else {
         indexerExpr = expressionFactory.getIntExpression(0);
     }
-    return expressionFactory.getFunctionExpression('__GET_VAR__', [
-        expressionFactory.getRawStringExpression(varInfo.name),
+    const result = expressionFactory.getFunctionExpression('__GET_VAR__', [
         varInfo.isInt ? expressionFactory.getIntExpression(-1) : expressionFactory.getIntExpression(0),
         indexerExpr
     ]);
+    writeStringAsExpressions(varInfo.name, result.value.args);
+    return result;
 };
 
 exports.parseSetVariable = parseSetVariable;

@@ -4,3 +4,8 @@ qsp-parser.iml
 
 # The file 'workspace.xml' should be ignored at all times
 .idea/workspace.xml
+
+# temp files
+node_modules/
+yarn.lock
+.nyc_output/
