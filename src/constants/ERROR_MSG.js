@@ -8,5 +8,6 @@ module.exports = {
     SYMBOL_MISSING: (cmd, symbol) => `Symbol '${symbol}' is missing for '${cmd}' expression`,
     INVALID_OP_ORDER: 'Invalid order of operators/operands',
     INVALID_EXPR: 'Failed to parse expression',
-    EMPTY_EXPR: 'Empty expression'
+    EMPTY_EXPR: 'Empty expression',
+    MISSING_END: '\'END\' statement is missing'
 };
