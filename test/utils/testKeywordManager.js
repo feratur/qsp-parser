@@ -12,6 +12,8 @@ describe('keywordManager', () => {
         it('works as intended', () => {
             const result = keywordManager.findFunction('$ARRCOMP');
             expect(result.name).to.equal('ARRCOMP');
+            expect(result.minArgs).to.equal(2);
+            expect(result.maxArgs).to.equal(3);
         });
         it('returns null for non-existing function', () => {
             const result = keywordManager.findFunction('TESTNULL');
@@ -35,11 +37,15 @@ describe('keywordManager', () => {
             const result = keywordManager.findCommand('ADDLIB', 'ADDLIB ()');
             expect(result.match).to.equal('ADDLIB');
             expect(result.command.name).to.equal('ADDLIB');
+            expect(result.command.minArgs).to.equal(1);
+            expect(result.command.maxArgs).to.equal(1);
         });
         it('works with multi-word command', () => {
             const result = keywordManager.findCommand('CLOSE', 'CLOSE   ALL');
             expect(result.match).to.equal('CLOSE   ALL');
             expect(result.command.name).to.equal('CLOSE ALL');
+            expect(result.command.minArgs).to.equal(0);
+            expect(result.command.maxArgs).to.equal(0);
         });
         it('returns null for non-existing command', () => {
             const result = keywordManager.findCommand('TEST', 'TEST   ALL');

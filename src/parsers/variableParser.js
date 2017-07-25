@@ -57,9 +57,7 @@ const writeStringAsExpressions = (str, exprList) => {
 
 const parseSetVariable = (str, parseFunc) => {
     const assignment = tryParseVarAssignment(str);
-    if (!assignment)
-        return null;
-    if (keywordManager.findFunction(assignment.varName))
+    if (!assignment || keywordManager.findFunction(assignment.varName))
         return null;
     let indexerExpr;
     if (assignment.indexer) {

@@ -1,6 +1,3 @@
-const variableParser = require('../../src/parsers/variableParser');
-const expressionParser = require('../../src/parsers/expressionParser');
-const expressionFactory = require('../../src/utils/expressionFactory');
 const lineParser = require('../../src/parsers/lineParser');
 
 const chai = require('chai');
@@ -26,24 +23,10 @@ describe('lineParser', () => {
         });
         it('prints by default', () => {
             const result = lineParser.parseLine('+2', 1, [], {});
-            const expectedResult = JSON.parse(`
-                {
-                  "name": "*PL",
-                  "args": [
-                    {
-                      "isAtom": false,
-                      "value": {
-                        "name": "__U_PLUS__",
-                        "args": [
-                          {
-                            "isAtom": true,
-                            "value": 2
-                          }
-                        ]
-                      }
-                    }
-                  ]
-                }`);
+            const expectedResult = {
+                "name": "*PL",
+                "args": [{"isAtom": false, "value": {"name": "__U_PLUS__", "args": [{"isAtom": true, "value": 2}]}}]
+            };
             expect(result).to.deep.equal(expectedResult);
         });
         it('throws on invalid \'LET/SET\' statement', () => {

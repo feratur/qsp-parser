@@ -90,51 +90,26 @@ describe('variableParser', () => {
             for (let i = 3; i < result.args.length; ++i) {
                 resultVarName += String.fromCharCode(result.args[i].value);
             }
-            const expectedValue = JSON.parse(`
-                {
-                  "isAtom": false,
-                  "value": {
+            const expectedValue = {
+                "isAtom": false,
+                "value": {
                     "name": "__PLUS__",
-                    "args": [
-                      {
+                    "args": [{
                         "isAtom": false,
                         "value": {
-                          "name": "__GET_VAR__",
-                          "args": [
-                            {
-                              "isAtom": true,
-                              "value": -1
-                            },
-                            {
-                              "isAtom": true,
-                              "value": 0
-                            },
-                            {
-                              "isAtom": true,
-                              "value": 84
-                            },
-                            {
-                              "isAtom": true,
-                              "value": 69
-                            },
-                            {
-                              "isAtom": true,
-                              "value": 83
-                            },
-                            {
-                              "isAtom": true,
-                              "value": 84
-                            }
-                          ]
+                            "name": "__GET_VAR__",
+                            "args": [
+                                {"isAtom": true, "value": -1},
+                                {"isAtom": true, "value": 0},
+                                {"isAtom": true, "value": 84},
+                                {"isAtom": true, "value": 69},
+                                {"isAtom": true, "value": 83},
+                                {"isAtom": true, "value": 84}
+                            ]
                         }
-                      },
-                      {
-                        "isAtom": true,
-                        "value": 42
-                      }
-                    ]
-                  }
-                }`);
+                    }, {"isAtom": true, "value": 42}]
+                }
+            };
             expect(result.name).to.equal('__SET_VAR__');
             expect(result.args[0]).to.deep.equal(expressionFactory.getIntExpression(-1));
             expect(result.args[1]).to.deep.equal(expressionFactory.getIntExpression(0));

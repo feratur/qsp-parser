@@ -57,107 +57,58 @@ describe('exprTreeBuilder', () => {
                 expressionFactory.getOperatorExpression('OR'),
                 expressionFactory.getIntExpression(1),
             ]);
-            const expectedObj = JSON.parse(`
-                {
-                  "isAtom": false,
-                  "value": {
+            const expectedObj = {
+                "isAtom": false,
+                "value": {
                     "name": "__OR__",
-                    "args": [
-                      {
+                    "args": [{
                         "isAtom": false,
                         "value": {
-                          "name": "__PLUS__",
-                          "args": [
-                            {
-                              "isAtom": false,
-                              "value": {
-                                "name": "__PLUS__",
-                                "args": [
-                                  {
-                                    "isAtom": false,
-                                    "value": {
-                                      "name": "__U_PLUS__",
-                                      "args": [
-                                        {
-                                          "isAtom": true,
-                                          "value": 1
+                            "name": "__PLUS__",
+                            "args": [{
+                                "isAtom": false,
+                                "value": {
+                                    "name": "__PLUS__",
+                                    "args": [{
+                                        "isAtom": false,
+                                        "value": {"name": "__U_PLUS__", "args": [{"isAtom": true, "value": 1}]}
+                                    }, {
+                                        "isAtom": false,
+                                        "value": {
+                                            "name": "__DIV__",
+                                            "args": [{"isAtom": true, "value": 2}, {"isAtom": true, "value": 3}]
                                         }
-                                      ]
-                                    }
-                                  },
-                                  {
-                                    "isAtom": false,
-                                    "value": {
-                                      "name": "__DIV__",
-                                      "args": [
-                                        {
-                                          "isAtom": true,
-                                          "value": 2
-                                        },
-                                        {
-                                          "isAtom": true,
-                                          "value": 3
-                                        }
-                                      ]
-                                    }
-                                  }
-                                ]
-                              }
-                            },
-                            {
-                              "isAtom": false,
-                              "value": {
-                                "name": "__MULT__",
-                                "args": [
-                                  {
-                                    "isAtom": true,
-                                    "value": 2
-                                  },
-                                  {
-                                    "isAtom": false,
-                                    "value": {
-                                      "name": "__NO__",
-                                      "args": [
-                                        {
-                                          "isAtom": false,
-                                          "value": {
-                                            "name": "__PLUS__",
-                                            "args": [
-                                              {
+                                    }]
+                                }
+                            }, {
+                                "isAtom": false,
+                                "value": {
+                                    "name": "__MULT__",
+                                    "args": [{"isAtom": true, "value": 2}, {
+                                        "isAtom": false,
+                                        "value": {
+                                            "name": "__NO__",
+                                            "args": [{
                                                 "isAtom": false,
                                                 "value": {
-                                                  "name": "__U_MINUS__",
-                                                  "args": [
-                                                    {
-                                                      "isAtom": true,
-                                                      "value": 2
-                                                    }
-                                                  ]
+                                                    "name": "__PLUS__",
+                                                    "args": [{
+                                                        "isAtom": false,
+                                                        "value": {
+                                                            "name": "__U_MINUS__",
+                                                            "args": [{"isAtom": true, "value": 2}]
+                                                        }
+                                                    }, {"isAtom": true, "value": 2}]
                                                 }
-                                              },
-                                              {
-                                                "isAtom": true,
-                                                "value": 2
-                                              }
-                                            ]
-                                          }
+                                            }]
                                         }
-                                      ]
-                                    }
-                                  }
-                                ]
-                              }
-                            }
-                          ]
+                                    }]
+                                }
+                            }]
                         }
-                      },
-                      {
-                        "isAtom": true,
-                        "value": 1
-                      }
-                    ]
-                  }
-                }`);
+                    }, {"isAtom": true, "value": 1}]
+                }
+            };
             expect(result).to.deep.equal(expectedObj);
         });
     });
