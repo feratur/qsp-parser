@@ -13,10 +13,12 @@ const findBracket = (str, startIndex) => {
     let bracketCount = 1;
     for (let i = startIndex + 1; i < str.length; ++i) {
         const char = str.charAt(i);
-        if (char === closing && --bracketCount === 0)
-            return i;
-        if (char === opening)
+        if (char === closing) {
+            if (--bracketCount === 0)
+                return i;
+        } else if (char === opening) {
             ++bracketCount;
+        }
     }
     throw new Error(ERROR_MSG.BRACKET_NOT_FOUND(opening));
 };
@@ -58,7 +60,64 @@ const findNonEmptySymbol = (str, startIndex) => {
     return -1;
 };
 
+const findSimpleStringBorders = (rawLines, startLineIndex, startCharIndex) => {
+    const terminatingSymbol = rawLines[startLineIndex].charAt(startCharIndex);
+    let charIndex = startCharIndex + 1;
+    for (let lineIndex = startLineIndex; lineIndex < rawLines.length; ++lineIndex) {
+        const line = rawLines[lineIndex];
+        for (let i = charIndex; i < line.length; ++i) {
+            if (line.charAt(i) !== terminatingSymbol)
+                continue;
+            if (line.charAt(i + 1) === terminatingSymbol)
+                ++i;
+            else
+                return ({
+                    startLineIndex: startLineIndex,
+                    startCharIndex: startCharIndex,
+                    endLineIndex: lineIndex,
+                    endCharIndex: i
+                });
+        }
+        charIndex = 0;
+    }
+    throw new Error(`Failed to parse string literal: terminating bracket '${terminatingSymbol}' not found`);
+};
+
+const findDynamicStringBorders = (rawLines, startLineIndex, startCharIndex) => {
+    let bracketCount = 1;
+    let charIndex = startCharIndex + 1;
+    for (let lineIndex = startLineIndex; lineIndex < rawLines.length; ++lineIndex) {
+        for (let i = charIndex; i < rawLines[lineIndex].length; ++i) {
+            const char = rawLines[lineIndex].charAt(i);
+            if (char === '}') {
+                if (--bracketCount === 0)
+                    return ({
+                        startLineIndex: startLineIndex,
+                        startCharIndex: startCharIndex,
+                        endLineIndex: lineIndex,
+                        endCharIndex: i
+                    });
+            } else if (char === '{') {
+                ++bracketCount;
+            } else if (char === "'" || char === '"') {
+                const borders = findSimpleStringBorders(rawLines, lineIndex, i);
+                lineIndex = borders.endLineIndex;
+                i = borders.endCharIndex;
+            }
+        }
+        charIndex = 0;
+    }
+    throw new Error(`Failed to parse dynamic string literal: terminating bracket '}' not found`);
+};
+
+const findStringBorders = (rawLines, startLineIndex, startCharIndex) => {
+    if (rawLines[startLineIndex].charAt(startCharIndex) === '{')
+        return findDynamicStringBorders(rawLines, startLineIndex, startCharIndex);
+    return findSimpleStringBorders(rawLines, startLineIndex, startCharIndex);
+};
+
 exports.findBracket = findBracket;
 exports.splitArguments = splitArguments;
 exports.findNonEmptySymbol = findNonEmptySymbol;
 exports.validateArgCount = validateArgCount;
+exports.findStringBorders = findStringBorders;

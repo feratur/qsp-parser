@@ -62,4 +62,31 @@ describe('syntaxUtils', () => {
             expect(result).to.equal(-1);
         });
     });
+    describe('findStringBorders', () => {
+        it('works as intended', () => {
+            const fixture1 = [`012'45''`, `"1'3`];
+            const fixture2 = [`012"45""`, `'1"3`];
+            const fixture3 = [`012{{"}"`, `}1}3`];
+            const result1 = syntaxUtils.findStringBorders(fixture1, 0, 3);
+            const result2 = syntaxUtils.findStringBorders(fixture2, 0, 3);
+            const result3 = syntaxUtils.findStringBorders(fixture3, 0, 3);
+            const expectedResult = {
+                "startLineIndex": 0,
+                "startCharIndex": 3,
+                "endLineIndex": 1,
+                "endCharIndex": 2
+            };
+            expect(result1).to.deep.equal(expectedResult);
+            expect(result2).to.deep.equal(expectedResult);
+            expect(result3).to.deep.equal(expectedResult);
+        });
+        it('throws without terminating symbol', () => {
+            const test1 = () => syntaxUtils.findStringBorders([`'123`], 0, 0);
+            const test2 = () => syntaxUtils.findStringBorders([`"123`], 0, 0);
+            const test3 = () => syntaxUtils.findStringBorders([`{123`], 0, 0);
+            expect(test1).to.throw();
+            expect(test2).to.throw();
+            expect(test3).to.throw();
+        });
+    });
 });
