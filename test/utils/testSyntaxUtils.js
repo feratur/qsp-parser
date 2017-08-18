@@ -1,4 +1,5 @@
 const syntaxUtils = require('../../src/utils/syntaxUtils');
+const os = require('os');
 
 const chai = require('chai');
 const {describe, it} = require('mocha');
@@ -87,6 +88,37 @@ describe('syntaxUtils', () => {
             expect(test1).to.throw();
             expect(test2).to.throw();
             expect(test3).to.throw();
+        });
+    });
+    describe('extractStringLiteral', () => {
+        it('works as intended', () => {
+            const fixture1 = [`012'45''`, `abc`, `"1'3`];
+            const fixture2 = [`012"45""`, `abc`, `'1"3`];
+            const fixture3 = [`012{{"}"`, `abc`, `}1}3`];
+            const fixture4 = [`{42}`];
+            const borders = {
+                startLineIndex: 0,
+                startCharIndex: 3,
+                endLineIndex: 2,
+                endCharIndex: 2
+            };
+            const result1 = syntaxUtils.extractStringLiteral(fixture1, borders);
+            const result2 = syntaxUtils.extractStringLiteral(fixture2, borders);
+            const result3 = syntaxUtils.extractStringLiteral(fixture3, borders);
+            const result4 = syntaxUtils.extractStringLiteral(fixture4, {
+                startLineIndex: 0,
+                startCharIndex: 0,
+                endLineIndex: 0,
+                endCharIndex: 3
+            });
+            expect(result1.content).to.equal(`45'` + os.EOL + `abc` + os.EOL + `"1`);
+            expect(result2.content).to.equal(`45"` + os.EOL + `abc` + os.EOL + `'1`);
+            expect(result3.content).to.equal(`{"}"` + os.EOL + `abc` + os.EOL + `}1`);
+            expect(result4.content).to.equal(`42`);
+            expect(result1.isDynamic).to.be.false();
+            expect(result2.isDynamic).to.be.false();
+            expect(result3.isDynamic).to.be.true();
+            expect(result4.isDynamic).to.be.true();
         });
     });
 });

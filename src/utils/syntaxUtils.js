@@ -1,10 +1,42 @@
 const ERROR_MSG = require('../constants/ERROR_MSG');
+const os = require('os');
 
 const brackets = {
     '(': ')',
     '[': ']',
-    '{': '}',
-    '<': '>'
+    '{': '}'
+};
+
+const unescapeString = (str, startChar) => {
+    if (startChar === '{')
+        return str;
+    switch (startChar) {
+        case "'":
+            return str.replace(/''/g, "'");
+        case '"':
+            return str.replace(/""/g, '"');
+    }
+};
+
+const extractStringLiteral = (rawLines, borders) => {
+    const startChar = rawLines[borders.startLineIndex].charAt(borders.startCharIndex);
+    let result;
+    if (borders.startLineIndex === borders.endLineIndex) {
+        result = unescapeString(
+            rawLines[borders.startLineIndex].slice(borders.startCharIndex + 1, borders.endCharIndex),
+            startChar
+        );
+    } else {
+        result =
+            unescapeString(rawLines[borders.startLineIndex].slice(borders.startCharIndex + 1), startChar) + os.EOL;
+        for (let lineIndex = borders.startLineIndex + 1; lineIndex < borders.endLineIndex; ++lineIndex)
+            result += unescapeString(rawLines[lineIndex], startChar) + os.EOL;
+        result += unescapeString(rawLines[borders.endLineIndex].slice(0, borders.endCharIndex), startChar);
+    }
+    return {
+        content: result,
+        isDynamic: startChar === '{'
+    };
 };
 
 const findBracket = (str, startIndex) => {
@@ -121,3 +153,4 @@ exports.splitArguments = splitArguments;
 exports.findNonEmptySymbol = findNonEmptySymbol;
 exports.validateArgCount = validateArgCount;
 exports.findStringBorders = findStringBorders;
+exports.extractStringLiteral = extractStringLiteral;

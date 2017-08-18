@@ -37,7 +37,7 @@ describe('normalizer', () => {
                 "commentMap": {
                     "0": 0,
                     "1": 0,
-                    "3": 15
+                    "3": 16
                 }
             };
             const result = normalizer.getStringsAndComments('TEST', fixture);
